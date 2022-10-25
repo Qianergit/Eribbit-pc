@@ -1,0 +1,4 @@
+/dist
+# dist裤不用做校验
+/src/vander
+# /src/vander是放第三方库的地方不用校验 #
