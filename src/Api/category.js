@@ -11,3 +11,11 @@ export const findAllCatory = () => {
  export const findTopCategory = (id) => {
     return request('/category', 'get', { id })
   }
+
+  /* 
+  二级类目获取分类信息的api
+
+  */
+  export const findSubCategoryFilter = (id)=>{
+    return request('/category/sub/filter', 'get', { id })
+  }
