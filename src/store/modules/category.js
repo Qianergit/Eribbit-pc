@@ -5,7 +5,7 @@ export default {
     namespaced: true,
     state() {
         return {
-            //   分类信息集合,以来Category重新设置，但是这里先放进来的这写是保证先不需要请求导致的空白
+            //   分类信息集合,依赖Category重新设置，但是这里先放进来的这写是保证先不需要请求导致的空白
             list: topCategory.map(item => {
                 return { name: item }
             })

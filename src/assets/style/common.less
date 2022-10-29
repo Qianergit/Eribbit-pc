@@ -112,3 +112,21 @@
       }
     }
   }
+  // 面包屑动画
+// 进入 从右侧20px位移 透明度0 做过度来到本来的位置（没有位移时的位置）透明度1
+// 离开时 本来位置 没有位置 透明度1 过度0.5 有右侧20px的唯一透明度0
+// 动画执行的条件是标签的创建和移除
+.fade-right-enter-to,
+.fade-right-leave-from{
+  opacity: 1;
+  transform: none;
+}
+.fade-right-enter-active,
+.fade-right-leave-active{
+  transition: all .5s;
+}
+.fade-right-enter-from,
+.fade-right-leave-to{
+  opacity: 0;
+  transform: translate3d(20px,0,0);
+}

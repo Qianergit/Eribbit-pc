@@ -28,6 +28,9 @@ const routes = [{
 const router = createRouter({
     // 使用hash的路由模式
     history: createWebHashHistory(),
+    scrollBehavior(){
+        return {left:0,top:0}
+    },
     routes
 })
 

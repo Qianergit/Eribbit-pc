@@ -2,16 +2,30 @@
 // 插件
 // vue2插件要素：导出一个对象。有install函数默认导入了vue构造函数
 // vue3插件要素：导出一个对象。有install函数默认导入了app应用实例
-import XtxSkeleton from './xtx-skeleton'
-import XtxCarousel from './xtx-carousel'
-import XtxMore from './xtx-more'
+// import XtxSkeleton from './xtx-skeleton'
+// import XtxCarousel from './xtx-carousel'
+// import XtxMore from './xtx-more'
+// import XtxBread from './xtx-bread'
+// import XtxBreadItem from './xtx-bread-item'
 import defaultImg from '@/assets/images/200.png'
+// context()参数第一个目录名，第二个是否加载子目录，你所加载的文件的正则匹配
+const importFn = require.context('./',false,/\.vue$/)
 export default {
     install(app) {
         // 在app上面进行拓展，app提供component directive方法
-        app.component(XtxSkeleton.name, XtxSkeleton)
-        app.component(XtxCarousel.name,XtxCarousel)
-        app.component(XtxMore.name,XtxMore)
+        // app.component(XtxSkeleton.name, XtxSkeleton)
+        // app.component(XtxCarousel.name,XtxCarousel)
+        // app.component(XtxMore.name,XtxMore)
+        // app.component(XtxBread.name,XtxBread)
+        // app.component(XtxBreadItem.name,XtxBreadItem)
+
+        // 根据keys()批量注册组件这里的keys方法可以拿到所有的路径并且组成一个数组
+        importFn.keys().forEach(path=>{
+            // require.context('./',false,/\.vue$/)返回一个导入组件的方法
+            const component=importFn(path).default //这里的componet就是一个一个的组件
+            // 开始注册
+            app.component(component.name,component)
+        })
         // 定义一个指令
         defineDirective(app)
     }
