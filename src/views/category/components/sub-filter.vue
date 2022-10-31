@@ -4,14 +4,14 @@
      <div class="item" >
        <div class="head">品牌：</div>
        <div class="body">
-         <a href="javascript:;" :class="{active:item.id===filterData.brands.slectedBrand}" v-for="item in filterData.brands" :key="item.id">{{item.name}}</a>
+         <a href="javascript:;" @click="changeBrand(item.id)" :class="{active:item.id===filterData.brands.selectedBrand}" v-for="item in filterData.brands" :key="item.id">{{item.name}}</a>
        </div>
      </div>
      <!-- 这里是选项 -->
      <div class="item" v-for="items in filterData.saleProperties" :key="items.id">
        <div class="head">{{items.name}}</div>
        <div class="body">
-         <a href="javascript:;" :class="{active:prop.id===items.selectedAttr}" v-for="prop in items.properties" :key="prop.id">{{prop.name}}</a>
+         <a href="javascript:;"  @click="changeProp(items,prop.id)" :class="{active:prop.id===items.selectedProp}" v-for="prop in items.properties" :key="prop.id">{{prop.name}}</a>
        </div>
      </div>
    </div>
@@ -30,7 +30,7 @@ import {findSubCategoryFilter}from '@/Api/category'
 
 export default {
   name: 'SubFilter',
-  setup(){
+  setup(prop,{emit}){
     const filterLoading = ref(false)
     const route = useRoute()
     // 监听二级类目的id的变化获取筛选数据
@@ -44,19 +44,47 @@ export default {
             findSubCategoryFilter(route.params.id).then(data=>{
                 // 每一组可选的筛选条件都缺失 全部这一项
                 // 给每一组数据加一个当前选中的id
-                data.result.brands.slectedBrand=null
+                data.result.brands.selectedBrand=null
                 data.result.brands.unshift({id:null,name:'全部'})
                 data.result.saleProperties.forEach(item=>{
-                    item.selectedAttr=null
+                    item.selectedProp=null
                     item.properties.unshift({id:null,name:'全部'})
                 })
                 console.log(data.result)
                 filterData.value=data.result
                 filterLoading.value=false
+               
             })
         }
      },{immediate:true})
-    return {filterData, filterLoading}
+    //  获取筛选参数的函数
+    const getFilterParams=()=>{
+         const obj={brandId:null,attrs:[]}
+        //  品牌
+        obj.brandId=filterData.value.brands.selectedBrand
+        // 销售属性
+        filterData.value.saleProperties.forEach(item=>{
+          if(item.selectedProp){
+            const prop=item.properties.find(prop=>prop.id===item.selectedProp)
+           obj.attrs.push({groupName:item.name,PropertyName:prop.name})
+          }
+        })
+        if(obj.attrs.length===0) obj.attrs=null
+        return obj
+    }
+    //  机录当前选择的品牌
+    const changeBrand=(brandId)=>{
+      if(filterData.value.selecttedBrand ===brandId) return 
+         filterData.value.brands.selectedBrand=brandId
+         emit('filter-change',getFilterParams())
+    }
+    // 机录已选择的销售属性
+    const changeProp = (item,propId)=>{
+      if( item.selectedProp===propId) return 
+       item.selectedProp=propId
+       emit('filter-change',getFilterParams())
+    }
+    return {filterData, filterLoading,changeProp,changeBrand}
   }
 }
 </script>

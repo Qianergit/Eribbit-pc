@@ -26,8 +26,9 @@
       </div>
   
      <!-- 各个分类推荐商品 -->
-     <div class="ref-goods" v-for="sub in subList" :key="sub.id">
-        <div class="head">
+     <div v-if="subList.length">
+     <div  class="ref-goods" v-for="sub in subList" :key="sub.id" >
+        <div class="head"  >
           <h3>- {{sub.name}} -</h3>
           <p class="tag">温暖柔软，品质之选</p>
           <XtxMore :path="`/category/sub/${sub.id}`" />
@@ -36,6 +37,7 @@
           <GoodsItem v-for="goods in sub.goods" :key="goods.id" :goods="goods" />
         </div>
       </div>
+    </div>
     </div>
     </div>
 </template>
@@ -71,16 +73,20 @@ const topCategory = computed(()=>{
    return cate
 })
 // 获取各个子类目下推荐商品
-const subList = ref([])
-    const getSubList = () => {
+ const subList = ref([])
+    const getSubList=() => {
       findTopCategory(route.params.id).then(data => {
+        subList.value=([])
+        console.log(subList)
         subList.value = data.result.children
       })
     }
+    getSubList()
     watch(()=>route.params.id,(newVal)=>{
-            if(newVal&&`category${newVal}`===route.path) getSubList()
+      
+            if(newVal&&`/category/${newVal}`=== route.path)  getSubList()
     },{immediate:true})
-return{sliders,topCategory,subList}
+return{sliders,topCategory,subList,getSubList}
 }
 }
 </script>
