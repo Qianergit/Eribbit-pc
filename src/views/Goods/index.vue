@@ -12,11 +12,13 @@
         <div class="goods-info">
         <div class="media">
             <GoodsImage :images="goods.mainPictures"/>
-            <GoodsSales />
+            <GoodsSales :goods="goods"/>
         </div>
         <div class="spec">
           <GoodsName :goods="goods"/>
+          <GoodsSku :goods="goods"></GoodsSku>
         </div>
+        
       </div>
         <!-- 商品推荐 -->
         <GoodsRelevant />
@@ -42,11 +44,12 @@
   import GoodsImage from './components/goods-images.vue'
   import {useRoute} from 'vue-router'
   import GoodsSales from './components/goods-sales'
-import GoodsName from './components/goods-name'
+  import GoodsName from './components/goods-name'
+  import GoodsSku from './components/goods-sku'
   export default {
     // 有可能出现路由地址商品id发生变化，但是不会重新初始化组件
     name: 'XtxGoodsPage',
-    components: {  GoodsRelevant,GoodsImage, GoodsSales, GoodsName },
+    components: {  GoodsRelevant,GoodsImage, GoodsSales, GoodsName,GoodsSku },
     setup(){
         // 获取商品详情
        
@@ -96,13 +99,13 @@ import GoodsName from './components/goods-name'
     min-height: 1000px;
   }
 }
-// .goods-tabs {
-//   min-height: 600px;
-//   background: #fff;
-// }
-// .goods-warn {
-//   min-height: 600px;
-//   background: #fff;
-//   margin-top: 20px;
-// }
+.goods-tabs {
+  min-height: 600px;
+  background: #fff;
+}
+.goods-warn {
+  min-height: 600px;
+  background: #fff;
+  margin-top: 20px;
+}
 </style>
