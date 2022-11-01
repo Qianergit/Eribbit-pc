@@ -12,8 +12,11 @@
         <div class="goods-info">
         <div class="media">
             <GoodsImage :images="goods.mainPictures"/>
+            <GoodsSales />
         </div>
-        <div class="spec"></div>
+        <div class="spec">
+          <GoodsName :goods="goods"/>
+        </div>
       </div>
         <!-- 商品推荐 -->
         <GoodsRelevant />
@@ -38,14 +41,17 @@
   import {findGoods} from '@/Api/product' 
   import GoodsImage from './components/goods-images.vue'
   import {useRoute} from 'vue-router'
+  import GoodsSales from './components/goods-sales'
+import GoodsName from './components/goods-name'
   export default {
     // 有可能出现路由地址商品id发生变化，但是不会重新初始化组件
     name: 'XtxGoodsPage',
-    components: {  GoodsRelevant,GoodsImage },
+    components: {  GoodsRelevant,GoodsImage, GoodsSales, GoodsName },
     setup(){
         // 获取商品详情
        
         const goods=useGoods()
+        console.log(goods)
         return {goods}
     },
    
@@ -63,9 +69,8 @@
         return goods
     }
   </script>
-  
-  <style scoped lang='less'>
-  .goods-info {
+<style scoped lang='less'>
+.goods-info {
   min-height: 600px;
   background: #fff;
   display: flex;
@@ -79,25 +84,25 @@
     padding: 30px 30px 30px 0;
   }
 }
-  .goods-footer {
-    display: flex;
-    margin-top: 20px;
-    .goods-article {
-      width: 940px;
-      margin-right: 20px;
-    }
-    .goods-aside {
-      width: 280px;
-      min-height: 1000px;
-    }
+.goods-footer {
+  display: flex;
+  margin-top: 20px;
+  .goods-article {
+    width: 940px;
+    margin-right: 20px;
   }
-  .goods-tabs {
-    min-height: 600px;
-    background: #fff;
+  .goods-aside {
+    width: 280px;
+    min-height: 1000px;
   }
-  .goods-warn {
-    min-height: 600px;
-    background: #fff;
-    margin-top: 20px;
-  }
-  </style>
+}
+// .goods-tabs {
+//   min-height: 600px;
+//   background: #fff;
+// }
+// .goods-warn {
+//   min-height: 600px;
+//   background: #fff;
+//   margin-top: 20px;
+// }
+</style>
