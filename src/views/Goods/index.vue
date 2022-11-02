@@ -30,12 +30,17 @@
         <div class="goods-footer">
           <div class="goods-article">
             <!-- 商品+评价 -->
-            <div class="goods-tabs"></div>
+            <div class="goods-tabs">
+              <GoodsTabs/>
+            </div>
             <!-- 注意事项 -->
             <div class="goods-warn"></div>
           </div>
           <!-- 24热榜+专题推荐 -->
-          <div class="goods-aside"></div>
+          <div class="goods-aside">
+            <GoodsHot/>
+            <GoodsHot :type="2"/>
+          </div>
         </div>
       </div>
     </div>
@@ -43,17 +48,19 @@
   
   <script>
   import GoodsRelevant from './components/goods-relevant'
-  import {ref,watch} from 'vue'
+  import {ref,watch,provide} from 'vue'
   import {findGoods} from '@/Api/product' 
   import GoodsImage from './components/goods-images.vue'
   import {useRoute} from 'vue-router'
   import GoodsSales from './components/goods-sales'
   import GoodsName from './components/goods-name'
   import GoodsSku from './components/goods-sku'
+  import GoodsTabs from './components/goods.tabs.vue'
+  import GoodsHot from './components/goods-hot.vue'
   export default {
     // 有可能出现路由地址商品id发生变化，但是不会重新初始化组件
     name: 'XtxGoodsPage',
-    components: {  GoodsRelevant,GoodsImage, GoodsSales, GoodsName,GoodsSku },
+    components: {  GoodsRelevant,GoodsImage, GoodsSales, GoodsName,GoodsSku,GoodsTabs,GoodsHot },
     setup(){
         // 获取商品详情
        
@@ -70,6 +77,8 @@
         }
         // 选择的数量 
         const num =ref(0)
+        // 依赖注入一下
+        provide('goods',goods)
         return {goods,changeSku,num}
     },
    
