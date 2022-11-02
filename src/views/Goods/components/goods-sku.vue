@@ -36,7 +36,7 @@ const pathMap = {}
                 pathMap[key]=[sku.id]
                 }
             })
-            console.log(pathMap)
+           
         }
     })
     return pathMap
@@ -67,18 +67,37 @@ const updateDisabledStatus = (specs,pathMap)=>{
         })
      })
 }
+// 默认选中
+   const initDefaultSeected=(goods,skuId)=>{
+          const sku = goods.skus.find(sku => sku.id===skuId)
+          
+          goods.specs.forEach((item,i)=>{
+            console.log(item)
+           const val= item.values.find(val=>val.name===sku.specs[i].valueName)
+             val.selected=true
+          })
+   }
   export default {
     name: 'GoodsSku',
     props:{
         goods:{
         type:Object,
         default:()=>({})
+        },
+        skuId:{
+          type:String,
+          default:''
         }
     },
-    setup(props){
+    setup(props,{emit}){
+      // 默认选中的按钮
+      if(props.skuId){
+        initDefaultSeected(props.goods,props.skuId)
+      }
+      
     const pathMap = getPathMap(props.goods.skus)
-    console.log(pathMap)
-    //    选中与取消选中，约定在每一个按钮都拥有自己的选中状态数据 selected
+    
+    // 选中与取消选中，约定在每一个按钮都拥有自己的选中状态数据 selected
     // 当你点击的是已选中，只需要取消当前的选中
     // 如果点击的是未选中，把同一个规格的按钮改成未选中
    const changeSku = (item,val)=>{
@@ -95,10 +114,31 @@ const updateDisabledStatus = (specs,pathMap)=>{
        }
         // 点击按钮时也要更新按钮的禁用状态
         updateDisabledStatus(props.goods.specs,pathMap)
+        // 将选择的sku信息通知给父组件{}
+        const selectedArr = getSelectedValues(props.goods.specs).filter(v => v)
+        if (selectedArr.length === props.goods.specs.length) {
+          const skuIds = pathMap[selectedArr.join(spliter)]
+          const sku = props.goods.skus.find(val=>val.id===skuIds[0])
+         
+          emit('change',{
+            skuId:sku.id,
+            price:sku.price,
+            oldPrice:sku.oldPrice,
+            inventory:sku.inventory,
+            specsText:sku.specs.reduce((p, n) => `${p} ${n.name} : ${n.valueName}`, '').trim()
+          })
+        }else{
+          // 父组件需要判断是否规格选择完整，不完整不能加购物车
+           emit('change',{})
+        }
+
    }
      // 组件初始化的时候更新一次按钮的状态
+    //  两种情况，1选择完整的sku组合拿到skuid才传输给父组件
+    // 2不是完整的sku组合按钮，提交空对象给父组件
+
      updateDisabledStatus(props.goods.specs,pathMap)
-   return {changeSku,pathMap}
+     return {changeSku,pathMap}
     }
   }
   </script>

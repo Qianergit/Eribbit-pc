@@ -16,7 +16,11 @@
         </div>
         <div class="spec">
           <GoodsName :goods="goods"/>
-          <GoodsSku :goods="goods"></GoodsSku>
+          <GoodsSku :goods="goods"  @change="changeSku"></GoodsSku>
+          <!-- 数量组件 -->
+          <XtxNumbox v-model="num" :max="goods.inventory" label="数量"/>
+          <!-- 按钮组件 -->
+          <XtxButton type="primary" style="margin-top:20px">加入购物车</XtxButton>
         </div>
         
       </div>
@@ -55,7 +59,18 @@
        
         const goods=useGoods()
         console.log(goods)
-        return {goods}
+        const changeSku = (sku)=>{
+          // 修改商品的现价原价库存信息
+          if(sku.skuId){
+            goods.value.price=sku.price
+            goods.value.oldPrice=sku.oldPrice
+            goods.value.inventory=sku.inventory
+            
+          }
+        }
+        // 选择的数量 
+        const num =ref(0)
+        return {goods,changeSku,num}
     },
    
   }
@@ -69,6 +84,7 @@
             })
         },{immediate:true})
         console.log(goods)
+        
         return goods
     }
   </script>
