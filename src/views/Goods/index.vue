@@ -88,7 +88,7 @@
         const route = useRoute()
         watch(()=>route.params.id,()=>{
             findGoods(route.params.id).then(data=>{
-                console.log(data)
+                
                 goods.value=data.result
             })
         },{immediate:true})
