@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-
+const Login = ()=> import ('@/views/login')
 const TopCategory = () =>
     import ('@/views/category/index')
 const SubCategory = () =>
@@ -29,7 +29,9 @@ const routes = [{
             }
 
         ]
-    }]
+    },
+    {path:'/login', component:Login}
+]
     // vue 2.0中 new VueRouter({}) 创建路由实例
     // vue3.0 中 createRouter（{}）创建路由实例
 const router = createRouter({

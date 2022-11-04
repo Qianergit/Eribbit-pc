@@ -7,18 +7,19 @@
 // import XtxMore from './xtx-more'
 // import XtxBread from './xtx-bread'
 // import XtxBreadItem from './xtx-bread-item'
+import Message from './Message'
 import defaultImg from '@/assets/images/200.png'
 // context()参数第一个目录名，第二个是否加载子目录，你所加载的文件的正则匹配
 const importFn = require.context('./',false,/\.vue$/)
 export default {
     install(app) {
         // 在app上面进行拓展，app提供component directive方法
+        // 如果要挂载到原型上 app.config.globalProperties 方式
         // app.component(XtxSkeleton.name, XtxSkeleton)
         // app.component(XtxCarousel.name,XtxCarousel)
         // app.component(XtxMore.name,XtxMore)
         // app.component(XtxBread.name,XtxBread)
         // app.component(XtxBreadItem.name,XtxBreadItem)
-
         // 根据keys()批量注册组件这里的keys方法可以拿到所有的路径并且组成一个数组
         importFn.keys().forEach(path=>{
             // require.context('./',false,/\.vue$/)返回一个导入组件的方法
@@ -28,6 +29,8 @@ export default {
         })
         // 定义一个指令
         defineDirective(app)
+        // 定义一个原型函数
+        app.config.globalProperties.$Message=Message
     }
 }
 const defineDirective=(app)=>{

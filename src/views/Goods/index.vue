@@ -48,7 +48,7 @@
   
   <script>
   import GoodsRelevant from './components/goods-relevant'
-  import {ref,watch,provide} from 'vue'
+  import {ref,watch,provide, nextTick} from 'vue'
   import {findGoods} from '@/Api/product' 
   import GoodsImage from './components/goods-images.vue'
   import {useRoute} from 'vue-router'
@@ -86,11 +86,17 @@
   const useGoods = ()=>{
         const goods = ref(null)
         const route = useRoute()
-        watch(()=>route.params.id,()=>{
+        watch(()=>route.params.id,(newVal)=>{
+          if(newVal && `/product/${newVal}`===route.path){
             findGoods(route.params.id).then(data=>{
-                
-                goods.value=data.result
+                // 让商品数据为null然后使用v-if的组件可以重新销毁和创建
+                goods.value=null
+                nextTick(()=>{
+                  goods.value=data.result
+                })
             })
+          }
+           
         },{immediate:true})
         console.log(goods)
         

@@ -36,6 +36,8 @@
             <span class="attr">{{formatSpecs(item.orderInfo.specs)}}</span>
           </div>
           <div class="text">{{item.content}}</div>
+          <!-- 评论的图片组件 -->
+          <goodsCommentImageVue v-if="item.pictures.length" :pictures="item.pictures" />
           <div class="time">
             <span>{{item.createTime}}</span>
             <span class="zan"><i class="iconfont icon-dianzan"></i>{{item.praiseCount}}</span>
@@ -43,13 +45,18 @@
         </div>
       </div>
     </div>
+    <XtxPagination v-if="total" :total="total" :page-size="reqParams.pageSize" :current-page="reqParams.page" @current-change="changePagerFn"/>
   </div>
 </template>
 <script>
 import {findGoodsCommentInfo,findGoodsCommentList} from '@/Api/product'
+import goodsCommentImageVue from './goods-comment-image.vue'
 import { ref ,inject,reactive, watch} from 'vue'
 export default {
   name: 'GoodsComment',
+  components:{
+    goodsCommentImageVue
+  },
   setup(){
     const commentInfo =ref(null)
     const goods = inject('goods')
@@ -78,7 +85,7 @@ export default {
         reqParams.tag=tag.title
       }
        // 页码重置到1
-       
+       reqParams.page=1
     }
     // 点击排序
     const changeSort = (sortFIeld)=>{
@@ -95,19 +102,25 @@ export default {
     })
     // 初始化需要发请求，少眩条件发生改变发请求
     const commentList = ref([])
+    const total = ref(0)
     watch(reqParams,()=>{
       findGoodsCommentList(goods.id,reqParams).then(data=>{
         console.log(data)
         commentList.value=data.result.items
+        total.value= data.result.counts
       })
     },{immediate:true})
     const formatSpecs = (specs)=>{
       return specs.reduce((p,c)=>`${p} ${c.name}:${c.nameVlaue}`,'').trim
     }
     const formatNickname=(nick)=>{
-      return nick.substr(0,1) + '*****' + nickname.substr(-1)
+      return nick.substr(0,1) + '*****' + nick.substr(-1)
     }
-    return {commentInfo,currentTagsIndex,changeTag,reqParams,changeSort,commentList,formatSpecs}
+    // 实现分页切换
+    const changePagerFn=(newPage)=>{
+         reqParams.page = newPage
+    }
+    return {commentInfo,currentTagsIndex,changeTag,reqParams,changeSort,commentList,formatSpecs,formatNickname,total,changePagerFn}
   }
 }
 </script>
